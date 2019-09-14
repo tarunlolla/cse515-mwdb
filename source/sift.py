@@ -18,5 +18,9 @@ def compute_des(img_path):
     gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     sift = cv2.xfeatures2d.SIFT_create()
     kp,des = sift.detectAndCompute(gray,None)
+    des=np.float64(des)
+    list_des=[]
+    for i in des:
+        list_des.append(list(i))
     #img=cv2.drawKeypoints(gray,kp,img,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    return des[0]
+    return list_des

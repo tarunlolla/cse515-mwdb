@@ -5,6 +5,7 @@ Created on Wed Sep 11 16:13:53 2019
 
 @author: tarunlolla
 """
+import pymongo
 import scipy
 import cv2
 import numpy as np
@@ -15,22 +16,32 @@ import cm
 import sift
 import time
 start_time = time.time()
-color_moments=[]
-sift_des=[]
+color_moments={}
+sift_des={}
 
 work_dir=input("Enter the location of dataset:")
+
+conn=pymongo.MongoClient('localhost',27017)
+db=conn.phase1
+collection1=db.color_moments
+collection2=db.sift
 
 z=1
 for i in os.listdir(work_dir):
     print(str(z)+" image running now")
     print("Computing color moments for "+i)
     x=cm.compute_cm(work_dir+'/'+i,100,100)
-    color_moments.append([i,x])
+    print("Computing color moments : --- %s seconds ---" % (time.time() - start_time))    
+    color_moments[str(i.replace('.',''))]=x
     print("Finding descriptor vectors for "+i)
     y=sift.compute_des(work_dir+'/'+i)
-    sift_des.append([i,list(y)])
+    print("Compute SIFT : --- %s seconds ---" % (time.time() - start_time)) 
+    sift_des[str(i.replace('.',''))]=list(y)
     z += 1
 
+collection1.insert_one(color_moments)
+print("--- %s seconds ---" % (time.time() - start_time))    
+collection2.insert_one(sift_des)
 print("--- %s seconds ---" % (time.time() - start_time))    
 """
 /home/tarunlolla/MWDB/Project/Hands
