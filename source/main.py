@@ -15,11 +15,13 @@ np.set_printoptions(threshold=sys.maxsize);
 import cm
 import sift
 import time
-start_time = time.time()
 color_moments={}
 sift_des={}
 
 work_dir=input("Enter the location of dataset:")
+
+start_time = time.time()
+print(start_time)
 
 conn=pymongo.MongoClient('localhost',27017)
 db=conn.phase1
@@ -33,18 +35,17 @@ for i in os.listdir(work_dir):
     x=cm.compute_cm(work_dir+'/'+i,100,100)
     print("Computing color moments : --- %s seconds ---" % (time.time() - start_time))    
     color_moments[str(i.replace('.',''))]=x
+    collection1.insert_one({ '_id' : str(i.replace('.','')), 'y_cm' : x[0], 'u_cm' : x[1], 'v_cm':x[2] })
     print("Finding descriptor vectors for "+i)
     y=sift.compute_des(work_dir+'/'+i)
     print("Compute SIFT : --- %s seconds ---" % (time.time() - start_time)) 
     sift_des[str(i.replace('.',''))]=list(y)
+    collection2.insert_one({ '_id' : str(i.replace('.','')), str(i.replace('.','')) : list(y) })
     z += 1
 
-collection1.insert_one(color_moments)
-print("--- %s seconds ---" % (time.time() - start_time))    
-collection2.insert_one(sift_des)
 print("--- %s seconds ---" % (time.time() - start_time))    
 """
-/home/tarunlolla/MWDB/Project/Hands
+/home/tarunlolla/MWDB/Project/Hands_Test
 Comments :: This code demonstrates how the blocks are being created.
 
 import cv2
