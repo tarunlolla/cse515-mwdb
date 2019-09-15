@@ -35,7 +35,7 @@ def split_image(image,split_height,split_width):
         for i in range(0,width,split_width):
             temp_block=img[i:i+split_width,j:j+split_height]
             blocks.append(temp_block)
-    print(str(len(blocks))+" blocks created.")
+    #print(str(len(blocks))+" blocks created.")
     return blocks
 
 
@@ -84,7 +84,7 @@ def compute_cm(image_path,block_height,block_width):
         v=compute_yuv_cm(i,2)
         blocks_cm.append(np.nan_to_num([y,u,v]))
     img_cm=compute_img_cm(blocks_cm)
-    print(img_cm)
+    #print(img_cm)
     return img_cm 
    
 

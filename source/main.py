@@ -44,8 +44,10 @@ for i in os.listdir(work_dir):
     z += 1
 
 print("--- %s seconds ---" % (time.time() - start_time))    
+
 """
 /home/tarunlolla/MWDB/Project/Hands_Test
+/home/tarunlolla/MWDB/Project/small_dataset
 Comments :: This code demonstrates how the blocks are being created.
 
 import cv2
