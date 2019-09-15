@@ -13,7 +13,7 @@ db=conn.phase1
 collection_cm=db.color_moments
 collection_sift=db.sift
 
-def eucl_dist_cm(img1,img2):
+def eucl_dist(img1,img2):
     img1_id=img1[0]
     img1_vector=img1[1]
     img2_id=img2[0]
@@ -38,21 +38,10 @@ def query_img_cm(qimg_id,k):
         all_images.append([i['_id'],i['y_cm']+i['u_cm']+i['v_cm']])
     dist=[]
     for i in all_images:
-        x,y=eucl_dist_cm(query_img_vector,i)
+        x,y=eucl_dist(query_img_vector,i)
         dist.append([x,y])
     dist=sorted(dist,key=lambda i:i[1])
     return dist[:k]
-
-def eucl_dist_sift(img1,img2):
-    img1_id=img1[0]
-    img1_vector=img1[1]
-    img2_id=img2[0]
-    img2_vector=img2[1]
-    dist=0.0
-    for i in range(0,len(img1_vector)):
-        dist += (img1_vector[i]-img2_vector[i])**2
-    return img2_id,dist**(1/2)
-
 
 def query_img_sift(qimg_id,k):
     query={ '_id' : qimg_id }
@@ -66,7 +55,7 @@ def query_img_sift(qimg_id,k):
         all_images.append([i['_id'],list(np.mean(i['descr'],axis=0))])
     dist=[]
     for i in all_images:
-        a,b=eucl_dist_sift(query_img,i)
+        a,b=eucl_dist(query_img,i)
         dist.append([a,b])
     dist=list(sorted(dist,key=lambda i:i[1]))
     return dist[:k]
