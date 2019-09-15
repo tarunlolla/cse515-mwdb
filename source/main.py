@@ -40,7 +40,7 @@ for i in os.listdir(work_dir):
     y=sift.compute_des(work_dir+'/'+i)
     print("Compute SIFT : --- %s seconds ---" % (time.time() - start_time)) 
     sift_des[str(i.replace('.',''))]=list(y)
-    collection2.insert_one({ '_id' : str(i.replace('.','')), str(i.replace('.','')) : list(y) })
+    collection2.insert_one({ '_id' : str(i.replace('.','')), 'descr' : list(y) })
     z += 1
 
 print("--- %s seconds ---" % (time.time() - start_time))    
