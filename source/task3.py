@@ -19,7 +19,7 @@ def eucl_dist_cm(img1,img2):
     img2_id=img2[0]
     img2_vector=img2[1]
     dist=0.0
-    for i in range(0,3):
+    for i in range(0,len(img1_vector)):
         dist += (img1_vector[i]-img2_vector[i])**2
     return img2_id,dist**(1/2)
 
@@ -68,5 +68,30 @@ def query_img_sift(qimg_id,k):
     for i in all_images:
         a,b=eucl_dist_sift(query_img,i)
         dist.append([a,b])
-    dist=sorted(dist,key=lambda i:i[1])
+    dist=list(sorted(dist,key=lambda i:i[1]))
     return dist[:k]
+
+def main():
+    img=input("Enter the path of the image to be queried :")
+    feature=input("Select your preference of the model (Enter 1 or 2): \n 1. Color Moments \n 2. SIFT : \t")
+    k=input("Enter the number of images to be matched :")
+    if feature == '1':
+        output=query_img_cm(img,int(k))
+    elif feature == '2':
+        output=query_img_sift(img,int(k))
+    else:
+        print("Error!!!! Invalid input for model")
+    
+    print("As per your choice of model, the result is as follows:")
+    
+    z=1
+    for i in output:
+        print("At rank ",z,"Image with ID ",i[0],"with a score of ",i[1])
+        z+=1
+
+if __name__ == '__main__' :
+    main()
+    
+    
+    
+#Hand_0011684jpg
