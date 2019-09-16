@@ -19,12 +19,14 @@ import time
 def main():
     work_dir=input("Enter the location of dataset:")
     conn=pymongo.MongoClient('localhost',27017)
-    db=conn.phase1_test
+    db=conn.phase1
     collection1=db.color_moments
     collection2=db.sift
+    collection3=db.img_path
     color_moments={}
     sift_des={}
     for i in os.listdir(work_dir):
+        collection3.insert_one({str(i.replace('.','')):work_dir+'/'+i})
         print("Computing color moments for "+i)
         x=cm.compute_cm(work_dir+'/'+i,100,100)
         color_moments[str(i.replace('.',''))]=x

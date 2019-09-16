@@ -5,13 +5,14 @@ Created on Sat Sep 14 15:44:58 2019
 
 @author: tarunlolla
 """
-
+import cv2
 import pymongo
 import numpy as np
 conn=pymongo.MongoClient('localhost',27017)
 db=conn.phase1
 collection_cm=db.color_moments
 collection_sift=db.sift
+collection_img_path=db.img_path
 
 def eucl_dist(img1,img2):
     img1_id=img1[0]
@@ -61,7 +62,7 @@ def query_img_sift(qimg_id,k):
     return dist[:k]
 
 def main():
-    img=input("Enter the path of the image to be queried :")
+    img=input("Enter the id of the image to be queried :")
     feature=input("Select your preference of the model (Enter 1 or 2): \n 1. Color Moments \n 2. SIFT : \t")
     k=input("Enter the number of images to be matched :")
     if feature == '1':
@@ -77,7 +78,25 @@ def main():
     for i in output:
         print("At rank ",z,"Image with ID ",i[0],"with a score of ",i[1])
         z+=1
-
+    
+    print("Images will be displayed now ...")
+    path_query=collection_img_path.find({'_id' : { '$eq' : img }})
+    path_query_img=list(path_query)[0]['location']
+    disp_query_img=cv2.imread(path_query_img)
+    cv2.imshow('Query Image',disp_query_img)
+    cv2.waitKey(0)
+    z=1
+    disp_ans_img=[]
+    for i in output:
+        path_query=collection_img_path.find({'_id' : { '$eq' : i[0] }})
+        for x in path_query:
+            path=x['location']
+        disp_img=cv2.imread(path)
+        disp_ans_img.append(disp_img)
+        #cv2.imshow('Rank '+str(z),disp_img)
+    cv2.imshow('Ranked from left to right',np.concatenate(disp_ans_img[0:len(disp_ans_img)],axis=1))    
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 if __name__ == '__main__' :
     main()
     
